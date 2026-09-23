@@ -1,0 +1,380 @@
+<!-- Notification de brouillon détecté (fermable) -->
+@if (afficherAlerteBrouillon()) {
+  <aside class="draft-alert-banner" role="alert">
+    <div class="draft-alert-info">
+      <i class="bi bi-clock-history draft-alert-icon"></i>
+      <div>
+        <strong class="draft-alert-title">Projet non finalisé disponible</strong>
+        <p class="draft-alert-desc">Un brouillon enregistré a été détecté pour cet acte juridique.</p>
+      </div>
+    </div>
+
+    <div class="draft-alert-actions">
+      <button type="button" class="btn-restore-draft" (click)="reprendreBrouillon()">
+        <i class="bi bi-arrow-counterclockwise"></i>
+        <span>Reprendre la rédaction</span>
+      </button>
+
+      <button type="button" class="btn-close-draft" (click)="ignorerBrouillon()" title="Ignorer et fermer">
+        <i class="bi bi-x-lg"></i>
+      </button>
+    </div>
+  </aside>
+}
+
+@if (docData(); as doc) {
+  <div class="editor-workspace">
+    <!-- Barre d'outils supérieure de l'atelier -->
+    <header class="editor-toolbar">
+      <div class="toolbar-left">
+        <button type="button" class="btn-ghost" (click)="retourAuCatalogue()" title="Revenir à la sélection des modèles">
+          <i class="bi bi-arrow-left"></i>
+          <span>Catalogue</span>
+        </button>
+        <span class="toolbar-sep"></span>
+        <div class="doc-meta-summary">
+          <span class="meta-tag">{{ doc.identification.typeActe }}</span>
+          <span class="meta-title">{{ template()?.title }}</span>
+        </div>
+      </div>
+
+      <div class="toolbar-right">
+        @if (messageSauvegarde()) {
+          <span class="auto-save-indicator text-success">
+            <i class="bi bi-check-circle-fill"></i>
+            {{ messageSauvegarde() }}
+          </span>
+        } @else {
+          <span class="auto-save-indicator">
+            <i class="bi bi-shield-check"></i>
+            Brouillon actif
+          </span>
+        }
+
+        <button type="button" class="btn-ghost" (click)="sauvegarderManuel()" title="Enregistrer manuellement le brouillon">
+          <i class="bi bi-floppy"></i>
+          <span>Enregistrer</span>
+        </button>
+
+        <button type="button" class="btn-action-primary" (click)="passerALExport()">
+          <span>Finaliser l'acte</span>
+          <i class="bi bi-arrow-right"></i>
+        </button>
+      </div>
+    </header>
+
+    <!-- Écran divisé : Formulaire à gauche / Visualiseur A4 à droite -->
+    <div class="split-view">
+      <!-- PANNEAU GAUCHE : Formulaire dynamique -->
+      <section class="form-pane">
+        <div class="pane-scroll">
+          
+          <!-- Section 1 : Timbre et identification -->
+          <div class="form-card">
+            <h3 class="form-card-title">
+              <i class="bi bi-building me-2"></i>1. Timbre & En-tête officiel
+            </h3>
+            
+            <div class="field-group">
+              <label class="form-label">Ministère émetteur</label>
+              <input 
+                type="text" 
+                class="form-control" 
+                [(ngModel)]="doc.enTete.ministere" 
+                (ngModelChange)="notifyChange()"
+                placeholder="ex: MINISTÈRE DE L’ÉCONOMIE ET DES PARTICIPATIONS"
+              />
+            </div>
+
+            <div class="row-2-cols">
+              <div class="field-group">
+                <label class="form-label">Sigle du Ministère</label>
+                <input 
+                  type="text" 
+                  class="form-control" 
+                  [(ngModel)]="doc.enTete.sigleMinistere" 
+                  (ngModelChange)="notifyChange()"
+                  placeholder="ex: MEP"
+                />
+              </div>
+              <div class="field-group">
+                <label class="form-label">Direction générale</label>
+                <input 
+                  type="text" 
+                  class="form-control" 
+                  [(ngModel)]="doc.enTete.direction" 
+                  (ngModelChange)="notifyChange()"
+                  placeholder="ex: Direction Générale du Commerce"
+                />
+              </div>
+            </div>
+
+            <div class="row-2-cols">
+              <div class="field-group">
+                <label class="form-label">Numéro d'acte</label>
+                <input 
+                  type="text" 
+                  class="form-control" 
+                  [(ngModel)]="doc.identification.numero" 
+                  (ngModelChange)="notifyChange()"
+                  placeholder="ex: 0073"
+                />
+              </div>
+              <div class="field-group">
+                <label class="form-label">Année</label>
+                <input 
+                  type="text" 
+                  class="form-control" 
+                  [(ngModel)]="doc.identification.annee" 
+                  (ngModelChange)="notifyChange()"
+                  placeholder="ex: 2026"
+                />
+              </div>
+            </div>
+
+            <div class="field-group">
+              <label class="form-label">Objet de l'acte juridique</label>
+              <textarea 
+                class="form-control" 
+                rows="3"
+                [(ngModel)]="doc.identification.objet" 
+                (ngModelChange)="notifyChange()"
+                placeholder="portant réglementation des tarifs de..."
+              ></textarea>
+            </div>
+          </div>
+
+          <!-- Section 2 : Visas juridiques -->
+          <div class="form-card">
+            <div class="card-header-flex">
+              <h3 class="form-card-title">
+                <i class="bi bi-journal-check me-2"></i>2. Visas juridiques
+              </h3>
+              <button type="button" class="btn-sm-action" (click)="ajouterVisa()">
+                <i class="bi bi-plus"></i> Ajouter un visa
+              </button>
+            </div>
+
+            <div class="field-group mb-3">
+              <label class="form-label">Autorité signataire</label>
+              <input 
+                type="text" 
+                class="form-control" 
+                [(ngModel)]="doc.autorite" 
+                (ngModelChange)="notifyChange()"
+                placeholder="ex: Le Ministre de l'Économie et des Participations ;"
+              />
+            </div>
+
+            <div class="repeater-list">
+              @for (visa of doc.visas; track visa.id; let i = $index) {
+                <div class="repeater-item">
+                  <div class="repeater-item-header">
+                    <span class="repeater-counter">Visa #{{ i + 1 }}</span>
+                    @if ((doc.visas?.length ?? 0) > 1) {
+                      <button type="button" class="btn-del" (click)="supprimerVisa(i)" title="Supprimer ce visa">
+                        <i class="bi bi-trash3"></i>
+                      </button>
+                    }
+                  </div>
+                  <textarea 
+                    class="form-control" 
+                    rows="2"
+                    [(ngModel)]="visa.texte" 
+                    (ngModelChange)="notifyChange()"
+                    placeholder="ex: Vu la Constitution ;"
+                  ></textarea>
+                </div>
+              }
+            </div>
+          </div>
+
+          <!-- Section 3 : Articles & Dispositif -->
+          <div class="form-card">
+            <div class="card-header-flex">
+              <h3 class="form-card-title">
+                <i class="bi bi-card-text me-2"></i>3. Dispositif (Articles)
+              </h3>
+              <button type="button" class="btn-sm-action" (click)="ajouterArticle()">
+                <i class="bi bi-plus"></i> Ajouter un article
+              </button>
+            </div>
+
+            <div class="repeater-list">
+              @for (art of doc.articles; track art.id; let i = $index) {
+                <div class="repeater-item">
+                  <div class="repeater-item-header">
+                    <span class="repeater-counter">Article {{ art.numero }}</span>
+                    @if ((doc.articles?.length ?? 0) > 1) {
+                      <button type="button" class="btn-del" (click)="supprimerArticle(i)" title="Supprimer cet article">
+                        <i class="bi bi-trash3"></i>
+                      </button>
+                    }
+                  </div>
+                  <div class="field-group mb-2">
+                    <input 
+                      type="text" 
+                      class="form-control" 
+                      [(ngModel)]="art.titre" 
+                      (ngModelChange)="notifyChange()"
+                      placeholder="Titre de l'article (facultatif, ex: Champ d'application)"
+                    />
+                  </div>
+                  <div class="field-group">
+                    <textarea 
+                      class="form-control" 
+                      rows="3"
+                      [(ngModel)]="art.contenu" 
+                      (ngModelChange)="notifyChange()"
+                      placeholder="Corps et prescriptions de l'article..."
+                    ></textarea>
+                  </div>
+                </div>
+              }
+            </div>
+          </div>
+
+          <!-- Section 4 : Fait et Signature -->
+          <div class="form-card">
+            <h3 class="form-card-title">
+              <i class="bi bi-pen me-2"></i>4. Fait et Signature
+            </h3>
+            
+            <div class="row-2-cols">
+              <div class="field-group">
+                <label class="form-label">Fait à</label>
+                <input 
+                  type="text" 
+                  class="form-control" 
+                  [(ngModel)]="doc.cloture.faitA" 
+                  (ngModelChange)="notifyChange()"
+                  placeholder="ex: Libreville"
+                />
+              </div>
+              <div class="field-group">
+                <label class="form-label">Date</label>
+                <input 
+                  type="date" 
+                  class="form-control" 
+                  [(ngModel)]="doc.cloture.dateSignature" 
+                  (ngModelChange)="notifyChange()"
+                />
+              </div>
+            </div>
+
+            <div class="field-group">
+              <label class="form-label">Titre officiel du signataire</label>
+              <input 
+                type="text" 
+                class="form-control" 
+                [(ngModel)]="doc.cloture.signatairePrincipal.titre" 
+                (ngModelChange)="notifyChange()"
+                placeholder="ex: Le Ministre de l'Économie et des Participations"
+              />
+            </div>
+
+            <div class="field-group">
+              <label class="form-label">Nom et prénom(s) du signataire</label>
+              <input 
+                type="text" 
+                class="form-control" 
+                [(ngModel)]="doc.cloture.signatairePrincipal.nom" 
+                (ngModelChange)="notifyChange()"
+                placeholder="ex: Jean-Baptiste ONDO"
+              />
+            </div>
+          </div>
+
+        </div>
+      </section>
+
+      <!-- PANNEAU DROIT : Feuille A4 en direct -->
+      <section class="preview-pane">
+        <div class="a4-container">
+          <article class="a4-sheet">
+            <!-- Timbre officiel haut-gauche & Devise haut-droite -->
+            <header class="doc-header-block">
+              <div class="timbre-box">
+                <p class="timbre-line uppercase bold">{{ doc.enTete.ministere || '[MINISTÈRE ÉMETTEUR]' }}</p>
+                @if (doc.enTete.sigleMinistere) {
+                  <p class="timbre-line">{{ doc.enTete.sigleMinistere }}</p>
+                }
+                @if (doc.enTete.direction) {
+                  <p class="timbre-line italic">{{ doc.enTete.direction }}</p>
+                }
+                <div class="timbre-sep">------</div>
+                <p class="timbre-line bold">
+                  N° {{ doc.identification.numero || '_____' }}
+                </p>
+              </div>
+
+              <div class="republique-box">
+                <p class="rep-line bold">RÉPUBLIQUE GABONAISE</p>
+                <p class="rep-devise">Union - Travail - Justice</p>
+                <div class="rep-sep">------</div>
+              </div>
+            </header>
+
+            <!-- Titre & Objet de l'acte -->
+            <div class="doc-title-block">
+              <h2 class="acte-type">
+                {{ doc.identification.typeActe }} N° {{ doc.identification.numero || '____' }}
+                @if (doc.identification.annee) {
+                  / {{ doc.identification.annee }}
+                }
+              </h2>
+              <p class="acte-objet">{{ doc.identification.objet || 'portant [Objet de l\'acte à renseigner dans le formulaire]' }}</p>
+            </div>
+
+            <!-- Autorité signataire -->
+            @if (doc.autorite) {
+              <div class="doc-autorite">
+                <p>{{ doc.autorite }}</p>
+              </div>
+            }
+
+            <!-- Visas Légistiques -->
+            <div class="doc-visas">
+              @for (visa of doc.visas; track visa.id) {
+                <p class="visa-paragraph">{{ visa.texte }}</p>
+              }
+            </div>
+
+            <!-- Formule Pivot Légistique -->
+            <div class="doc-pivot">
+              <p class="pivot-word">{{ doc.formulePivot }}</p>
+            </div>
+
+            <!-- Articles & Dispositif -->
+            <div class="doc-dispositif">
+              @for (art of doc.articles; track art.id) {
+                <div class="article-block">
+                  <p class="article-head">
+                    <strong>Article {{ art.numero }} :</strong> 
+                    @if (art.titre) {
+                      <span class="article-subtitle">({{ art.titre }})</span>
+                    }
+                  </p>
+                  <p class="article-text">{{ art.contenu || '[Contenu réglementaire de l\'article]' }}</p>
+                </div>
+              }
+            </div>
+
+            <!-- Clôture et Signature -->
+            <footer class="doc-signature-block">
+              <div class="signature-date">
+                <p>Fait à {{ doc.cloture.faitA || 'Libreville' }}, le {{ doc.cloture.dateSignature || '________' }}</p>
+              </div>
+
+              <div class="signature-author">
+                <p class="author-title bold">{{ doc.cloture.signatairePrincipal.titre || '[Qualité du Signataire]' }}</p>
+                <div class="signature-space"></div>
+                <p class="author-name">{{ doc.cloture.signatairePrincipal.nom || '[Nom du Signataire]' }}</p>
+              </div>
+            </footer>
+          </article>
+        </div>
+      </section>
+    </div>
+  </div>
+}

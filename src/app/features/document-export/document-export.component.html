@@ -1,0 +1,184 @@
+@if (doc(); as documentData) {
+  <div class="export-screen">
+    <!-- Barre supérieure de statut et d'actions institutionnelles -->
+    <header class="export-header no-print">
+      <div class="header-left">
+        <button type="button" class="btn-ghost" (click)="retourEditeur()" [disabled]="estVerrouille()">
+          <i class="bi bi-arrow-left"></i>
+          <span>{{ estVerrouille() ? 'Modification verrouillée' : 'Modifier l\'acte' }}</span>
+        </button>
+
+        <span class="toolbar-sep"></span>
+
+        <!-- Badge de statut dynamique -->
+        <span class="badge-statut" [ngClass]="'statut-' + statut().toLowerCase()">
+          <i class="bi" [ngClass]="{
+            'bi-pencil': statut() === 'BROUILLON',
+            'bi-lock-fill': statut() === 'FINALISE',
+            'bi-send-check-fill': statut() === 'TRANSMIS'
+          }"></i>
+          {{ statut() }}
+        </span>
+      </div>
+
+      <div class="header-actions">
+        @if (notification()) {
+          <span class="notification-toast">{{ notification() }}</span>
+        }
+
+        <!-- EF-3.2 : Téléchargements -->
+        <button type="button" class="btn-download" (click)="exporterWord()">
+          <i class="bi bi-file-earmark-word"></i>
+          <span>Word (.doc)</span>
+        </button>
+
+        <button type="button" class="btn-download" (click)="imprimerOuPDF()">
+          <i class="bi bi-printer-fill"></i>
+          <span>PDF / Impression</span>
+        </button>
+
+        <!-- EF-3.3 : Scellement de l'acte -->
+        @if (!estVerrouille()) {
+          <button type="button" class="btn-finalize" (click)="validerEtFinaliser()">
+            <i class="bi bi-patch-check"></i>
+            <span>Finaliser l'acte</span>
+          </button>
+        }
+
+        <!-- EF-3.4 : Transmission institutionnelle -->
+        <button type="button" class="btn-transmit" (click)="ouvrirModalTransmission()">
+          <i class="bi bi-send-fill"></i>
+          <span>Transmettre au SGG</span>
+        </button>
+      </div>
+    </header>
+
+    <!-- Zone principale -->
+    <main class="export-body">
+      <!-- Synthèse latérale et fiche de métadonnées -->
+      <aside class="export-sidebar no-print">
+        <div class="summary-card">
+          <h3 class="summary-title">Traçabilité & Métadonnées SGG</h3>
+          <ul class="summary-list">
+            <li><span>Identifiant acte :</span><strong>{{ documentData.identification.typeActe }} N° {{ documentData.identification.numero || 'SGG-DRAFT' }}</strong></li>
+            <li><span>Date de scellement :</span><strong>{{ documentData.cloture.dateSignature || 'En attente' }}</strong></li>
+            <li><span>Autorité compétente :</span><strong>{{ documentData.cloture.signatairePrincipal.titre }}</strong></li>
+            <li><span>Nombre de visas :</span><strong>{{ documentData.visas?.length ?? 0 }} visa(s)</strong></li>
+            <li><span>Nombre d'articles :</span><strong>{{ documentData.articles?.length ?? 0 }} article(s)</strong></li>
+          </ul>
+        </div>
+
+        @if (estVerrouille()) {
+          <div class="lock-notice">
+            <i class="bi bi-shield-lock-fill"></i>
+            <div>
+              <strong>Document Verrouillé</strong>
+              <p>Ce texte juridique a été marqué comme finalisé. Aucune modification de forme ou de fond n'est permise sans ordonnance de rejet.</p>
+            </div>
+          </div>
+        }
+      </aside>
+
+      <!-- Rendu feuille A4 conforme à la légistique gabonaise -->
+      <section class="preview-area">
+        <article class="a4-sheet" id="a4-export-sheet">
+          <header class="doc-header-block">
+            <div class="timbre-box">
+              <p class="timbre-line uppercase bold">{{ documentData.enTete.ministere }}</p>
+              <p class="timbre-line">{{ documentData.enTete.sigleMinistere }}</p>
+              @if (documentData.enTete.direction) {
+                <p class="timbre-line italic">{{ documentData.enTete.direction }}</p>
+              }
+              <div class="timbre-sep">------</div>
+              <p class="timbre-line bold">N° {{ documentData.identification.numero || '____' }}/{{ documentData.enTete.sigleMinistere || 'SG' }}</p>
+            </div>
+            <div class="republique-box">
+              <p class="rep-line bold">RÉPUBLIQUE GABONAISE</p>
+              <p class="rep-devise">Union - Travail - Justice</p>
+              <div class="rep-sep">------</div>
+            </div>
+          </header>
+
+          <div class="doc-title-block">
+            <h2 class="acte-type">{{ documentData.identification.typeActe }} N° {{ documentData.identification.numero || '____' }}/{{ documentData.identification.annee }}</h2>
+            <p class="acte-objet">{{ documentData.identification.objet }}</p>
+          </div>
+
+          @if (documentData.autorite) {
+            <div class="doc-autorite"><p>{{ documentData.autorite }}</p></div>
+          }
+
+          <div class="doc-visas">
+            @for (v of documentData.visas; track v.id) {
+              <p class="visa-paragraph">{{ v.texte }}</p>
+            }
+          </div>
+
+          <div class="doc-pivot"><p class="pivot-word">{{ documentData.formulePivot }}</p></div>
+
+          <div class="doc-dispositif">
+            @for (art of documentData.articles; track art.id) {
+              <div class="article-block">
+                <p class="article-head"><strong>Article {{ art.numero }} :</strong> @if (art.titre) { <em>({{ art.titre }})</em> }</p>
+                <p class="article-text">{{ art.contenu }}</p>
+              </div>
+            }
+          </div>
+
+          <footer class="doc-signature-block">
+            <div class="signature-date"><p>Fait à {{ documentData.cloture.faitA }}, le {{ documentData.cloture.dateSignature || '________' }}</p></div>
+            <div class="signature-author">
+              <p class="author-title bold">{{ documentData.cloture.signatairePrincipal.titre }}</p>
+              <div class="signature-space"></div>
+              <p class="author-name">{{ documentData.cloture.signatairePrincipal.nom }}</p>
+            </div>
+          </footer>
+        </article>
+      </section>
+    </main>
+
+    <!-- EF-3.4 : Dialogue modal de Transmission SGG -->
+    @if (modalTransmissionOuverte()) {
+      <div class="modal-backdrop">
+        <div class="modal-container">
+          <div class="modal-head">
+            <h3><i class="bi bi-send-check"></i> Transmission de l'acte au SGG</h3>
+            <button type="button" class="btn-close" (click)="fermerModalTransmission()">&times;</button>
+          </div>
+          <div class="modal-body">
+            <div class="form-group mb-3">
+              <label>Numéro de dossier SGG</label>
+              <input type="text" class="form-control" [(ngModel)]="donneesTransmission.dossierNumero">
+            </div>
+            <div class="form-group mb-3">
+              <label>Destinataire habilité</label>
+              <select class="form-control" [(ngModel)]="donneesTransmission.destinataireSgg">
+                <option value="Direction du Contrôle Légistique (SGG)">Direction du Contrôle Légistique (SGG)</option>
+                <option value="Secrétaire Général Adjoint du Gouvernement">Secrétaire Général Adjoint du Gouvernement</option>
+                <option value="Journal Officiel de la République Gabonaise">Service du Journal Officiel (Publication)</option>
+              </select>
+            </div>
+            <div class="form-group mb-3">
+              <label>Degré d'urgence</label>
+              <select class="form-control" [(ngModel)]="donneesTransmission.priorite">
+                <option value="NORMALE">Normale</option>
+                <option value="URGENTE">Urgente</option>
+                <option value="TRES_URGENTE">Très urgente (Communication en Conseil des Ministres)</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label>Bordereau / Observations</label>
+              <textarea class="form-control" rows="3" [(ngModel)]="donneesTransmission.observations" placeholder="Précisez les références d'accompagnement..."></textarea>
+            </div>
+          </div>
+          <div class="modal-foot">
+            <button type="button" class="btn-ghost" (click)="fermerModalTransmission()">Annuler</button>
+            <button type="button" class="btn-transmit" (click)="executerTransmission()">
+              <i class="bi bi-send-fill"></i> Confirmer la transmission
+            </button>
+          </div>
+        </div>
+      </div>
+    }
+  </div>
+}

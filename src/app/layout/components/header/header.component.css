@@ -1,0 +1,131 @@
+.app-header {
+  background-color: #ffffff;
+  border-bottom: 1px solid #e2e8f0;
+  width: 100%;
+}
+
+.header-container {
+  max-width: 1600px;
+  margin: 0 auto;
+  padding: 0.75rem 1.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+}
+
+.brand-zone {
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+  user-select: none;
+}
+
+.republique-block {
+  display: flex;
+  flex-direction: column;
+  line-height: 1.1;
+}
+
+.rep-text {
+  font-size: 0.6875rem;
+  font-weight: 800;
+  letter-spacing: 0.04em;
+}
+
+.rep-top {
+  color: #0b2545;
+}
+
+.rep-bottom {
+  color: #009e60;
+}
+
+.header-divider {
+  width: 1px;
+  height: 26px;
+  background-color: #cbd5e1;
+  margin: 0 1rem;
+}
+
+.app-title-group {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.app-icon {
+  font-size: 1.25rem;
+  color: #0b2545;
+}
+
+.app-title {
+  font-size: 1.125rem;
+  font-weight: 700;
+  color: #0b2545;
+  letter-spacing: -0.01em;
+}
+
+/* Bloc central */
+.header-center {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  background-color: #f8fafc;
+  border: 1px solid #e2e8f0;
+  padding: 0.35rem 0.9rem;
+  border-radius: 9999px;
+  font-size: 0.8125rem;
+  font-weight: 600;
+  color: #334155;
+}
+
+.header-center i {
+  color: #0284c7;
+  font-size: 0.95rem;
+}
+
+.header-actions {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.entity-pill {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.4rem 0.85rem;
+  background-color: #ffffff;
+  border: 1px solid #cbd5e1;
+  border-radius: 6px;
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: #1e293b;
+}
+
+.entity-pill i {
+  font-size: 0.95rem;
+  color: #475569;
+}
+
+.avatar-badge {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background-color: #0b2545;
+  color: #ffffff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.8125rem;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+}
+
+/* Responsivité écran moyen */
+@media (max-width: 900px) {
+  .header-center {
+    display: none;
+  }
+}

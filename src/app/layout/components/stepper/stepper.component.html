@@ -1,0 +1,33 @@
+<div class="stepper-wrapper">
+  <div class="stepper-container">
+    @for (etape of etapes; track etape.numero; let last = $last) {
+      <div 
+        class="step-node"
+        [class.active]="currentStep() === etape.numero"
+        [class.completed]="currentStep() > etape.numero"
+        (click)="onStepClick(etape.numero)"
+      >
+        <div class="step-circle">
+          @if (currentStep() > etape.numero) {
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3">
+              <path d="M20 6L9 17l-5-5"/>
+            </svg>
+          } @else {
+            <span>{{ etape.numero }}</span>
+          }
+        </div>
+
+        <div class="step-content">
+          <span class="step-title">{{ etape.numero }}. {{ etape.titre }}</span>
+        </div>
+      </div>
+
+      @if (!last) {
+        <div 
+          class="step-connector"
+          [class.completed]="currentStep() > etape.numero"
+        ></div>
+      }
+    }
+  </div>
+</div>

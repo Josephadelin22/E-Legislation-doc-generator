@@ -1,0 +1,391 @@
+.editor-workspace {
+  display: flex;
+  flex-direction: column;
+  height: calc(100vh - 120px);
+  background-color: #f1f5f9;
+}
+
+/* Barre d'outils supérieure */
+.editor-toolbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.6rem 1.5rem;
+  background-color: #ffffff;
+  border-bottom: 1px solid #cbd5e1;
+  z-index: 10;
+}
+
+.toolbar-left, .toolbar-right {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.btn-ghost {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.4rem 0.8rem;
+  background: transparent;
+  border: 1px solid #cbd5e1;
+  border-radius: 6px;
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: #334155;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.btn-ghost:hover {
+  background-color: #f8fafc;
+  border-color: #94a3b8;
+}
+
+.toolbar-sep {
+  width: 1px;
+  height: 24px;
+  background-color: #e2e8f0;
+}
+
+.doc-meta-summary {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.meta-tag {
+  background-color: #eff6ff;
+  color: #1e40af;
+  font-size: 0.75rem;
+  font-weight: 700;
+  padding: 0.2rem 0.5rem;
+  border-radius: 4px;
+}
+
+.meta-title {
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: #0f172a;
+}
+
+/* Statut de sauvegarde & Brouillon */
+.auto-save-indicator {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  font-size: 0.8125rem;
+  color: #64748b;
+  font-weight: 500;
+}
+
+.text-success {
+  color: #009e60 !important;
+  font-weight: 600;
+}
+
+.btn-action-primary {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.45rem 1rem;
+  background-color: #009e60;
+  color: #ffffff;
+  border: none;
+  border-radius: 6px;
+  font-size: 0.875rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.btn-action-primary:hover {
+  background-color: #008552;
+}
+
+/* Division de l'espace */
+.split-view {
+  display: grid;
+  grid-template-columns: 480px 1fr;
+  flex: 1;
+  overflow: hidden;
+}
+
+/* PANNEAU GAUCHE : Formulaire */
+.form-pane {
+  border-right: 1px solid #cbd5e1;
+  background-color: #f8fafc;
+  overflow-y: auto;
+}
+
+.pane-scroll {
+  padding: 1.25rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+}
+
+.form-card {
+  background-color: #ffffff;
+  border: 1px solid #e2e8f0;
+  border-radius: 8px;
+  padding: 1.25rem;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
+}
+
+.card-header-flex {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1rem;
+}
+
+.form-card-title {
+  font-size: 0.9375rem;
+  font-weight: 700;
+  color: #0f2b5c;
+  display: flex;
+  align-items: center;
+  margin: 0;
+}
+
+.field-group {
+  margin-bottom: 0.875rem;
+}
+
+.form-label {
+  display: block;
+  font-size: 0.8125rem;
+  font-weight: 600;
+  color: #334155;
+  margin-bottom: 0.35rem;
+}
+
+.form-control {
+  width: 100%;
+  padding: 0.55rem 0.75rem;
+  font-size: 0.875rem;
+  border: 1px solid #cbd5e1;
+  border-radius: 6px;
+  color: #0f172a;
+  background-color: #ffffff;
+  outline: none;
+  font-family: inherit;
+}
+
+.form-control:focus {
+  border-color: #0072ce;
+  box-shadow: 0 0 0 3px rgba(0, 114, 206, 0.15);
+}
+
+.row-2-cols {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.75rem;
+}
+
+.btn-sm-action {
+  font-size: 0.75rem;
+  font-weight: 600;
+  background-color: #eff6ff;
+  color: #1d4ed8;
+  border: 1px solid #bfdbfe;
+  padding: 0.25rem 0.6rem;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.repeater-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.repeater-item {
+  background-color: #f8fafc;
+  border: 1px solid #e2e8f0;
+  border-radius: 6px;
+  padding: 0.75rem;
+}
+
+.repeater-item-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 0.4rem;
+}
+
+.repeater-counter {
+  font-size: 0.75rem;
+  font-weight: 700;
+  color: #475569;
+}
+
+.btn-del {
+  background: transparent;
+  border: none;
+  color: #dc2626;
+  cursor: pointer;
+  font-size: 0.875rem;
+  padding: 0.1rem 0.3rem;
+}
+
+/* PANNEAU DROIT : Aperçu A4 */
+.preview-pane {
+  background-color: #64748b;
+  overflow-y: auto;
+  display: flex;
+  justify-content: center;
+  padding: 2.5rem 1.5rem;
+}
+
+.a4-container {
+  display: flex;
+  justify-content: center;
+  width: 100%;
+}
+
+.a4-sheet {
+  background: #ffffff;
+  width: 210mm;
+  min-height: 297mm;
+  padding: 25mm 20mm;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+  font-family: 'Times New Roman', Times, serif;
+  color: #000000;
+  line-height: 1.4;
+  font-size: 11pt;
+  display: flex;
+  flex-direction: column;
+}
+
+/* Typographie & En-tête officiel A4 */
+.doc-header-block {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 2rem;
+}
+
+.timbre-box {
+  width: 50%;
+  font-size: 9pt;
+  line-height: 1.25;
+}
+
+.republique-box {
+  width: 45%;
+  text-align: center;
+  font-size: 9pt;
+  line-height: 1.25;
+}
+
+.rep-devise {
+  font-style: italic;
+}
+
+.timbre-sep, .rep-sep {
+  margin: 0.3rem 0;
+  color: #475569;
+}
+
+.uppercase { text-transform: uppercase; }
+.bold { font-weight: bold; }
+.italic { font-style: italic; }
+
+.doc-title-block {
+  text-align: center;
+  margin-bottom: 1.8rem;
+}
+
+.acte-type {
+  font-size: 13pt;
+  font-weight: bold;
+  letter-spacing: 0.05em;
+  margin-bottom: 0.4rem;
+}
+
+.acte-objet {
+  font-size: 11pt;
+  font-weight: bold;
+  max-width: 85%;
+  margin: 0 auto;
+}
+
+.doc-autorite {
+  margin-bottom: 1rem;
+}
+
+.doc-visas {
+  margin-bottom: 1.5rem;
+  text-align: justify;
+}
+
+.visa-paragraph {
+  margin-bottom: 0.4rem;
+  text-indent: 1.5rem;
+}
+
+.doc-pivot {
+  text-align: center;
+  font-weight: bold;
+  letter-spacing: 0.1em;
+  margin: 1.5rem 0;
+}
+
+.doc-dispositif {
+  margin-bottom: 2rem;
+  text-align: justify;
+}
+
+.article-block {
+  margin-bottom: 1rem;
+}
+
+.article-head {
+  margin-bottom: 0.2rem;
+}
+
+.article-subtitle {
+  font-style: italic;
+  font-weight: normal;
+  margin-left: 0.25rem;
+}
+
+.article-text {
+  text-indent: 1.5rem;
+}
+
+/* Clôture et Signature A4 */
+.doc-signature-block {
+  margin-top: auto;
+  padding-top: 2.5rem;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  text-align: right;
+}
+
+.signature-date {
+  font-size: 11pt;
+  margin-bottom: 1.25rem;
+}
+
+.signature-author {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+}
+
+.author-title {
+  font-size: 11pt;
+  margin-bottom: 0.25rem;
+}
+
+.signature-space {
+  height: 60px;
+}
+
+.author-name {
+  font-size: 11pt;
+  font-weight: bold;
+}

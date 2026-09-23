@@ -1,0 +1,100 @@
+<div class="template-selection-view">
+  <!-- Bannière Hero officielle -->
+  <section class="catalog-hero">
+    <div class="hero-container">
+      <h1 class="hero-title">Catalogue des Modèles d'Actes</h1>
+      <p class="hero-subtitle">
+        Génération certifiée d'instruments juridiques d'État conformes aux normes du Conseil d'État.
+      </p>
+      <div class="hero-badge">
+        <span class="badge-dot"></span>
+        <span class="badge-text"></span>
+      </div>
+    </div>
+  </section>
+
+  <!-- Zone Filtres & Recherche -->
+  <div class="catalog-content">
+    <div class="filter-bar">
+      <div class="search-input-wrapper">
+        <i class="bi bi-search search-icon"></i>
+        <input 
+          type="text" 
+          placeholder="Rechercher par titre, mot-clé ou code d'acte..." 
+          [value]="searchQuery()"
+          (input)="onSearchChange($event)"
+          class="search-input"
+        />
+      </div>
+
+      <div class="category-pills">
+        @for (cat of categories; track cat) {
+          <button 
+            type="button" 
+            class="category-btn"
+            [class.active]="selectedCategory() === cat"
+            (click)="setCategory(cat)"
+          >
+            {{ cat }}
+          </button>
+        }
+      </div>
+    </div>
+
+    <!-- Grille des Modèles -->
+    <div class="templates-grid">
+      @for (tpl of filteredTemplates(); track tpl.id) {
+        <article class="template-card">
+          <div class="card-top">
+            <div class="badge-group">
+              <span class="category-tag">{{ tpl.category }}</span>
+              <span class="code-tag">{{ tpl.code }}</span>
+            </div>
+            @if (tpl.isFrequent) {
+              <span class="frequent-badge">
+                <i class="bi bi-star-fill"></i> Fréquent
+              </span>
+            }
+          </div>
+
+          <div class="card-body">
+            <h2 class="card-title">{{ tpl.title }}</h2>
+            <p class="card-desc">{{ tpl.description }}</p>
+
+            <div class="card-meta-list">
+              <div class="meta-item">
+                <i class="bi bi-shield-check"></i>
+                <span>{{ tpl.authority }}</span>
+              </div>
+              <div class="meta-item">
+                <i class="bi bi-filetype-docx"></i>
+                <span>Format : {{ tpl.format }}</span>
+              </div>
+              <div class="meta-item">
+                <i class="bi bi-git"></i>
+                <span>Version : {{ tpl.version }}</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="card-actions">
+            <button 
+              type="button" 
+              class="btn-select"
+              (click)="chooseTemplate(tpl)"
+            >
+              <span>Utiliser ce modèle</span>
+              <i class="bi bi-arrow-right"></i>
+            </button>
+          </div>
+        </article>
+      } @empty {
+        <div class="empty-state">
+          <i class="bi bi-folder-x empty-icon"></i>
+          <h3>Aucun modèle trouvé</h3>
+          <p>Modifiez vos critères de recherche ou sélectionnez une autre catégorie.</p>
+        </div>
+      }
+    </div>
+  </div>
+</div>

@@ -1,0 +1,242 @@
+.export-screen {
+  min-height: calc(100vh - 120px);
+  display: flex;
+  flex-direction: column;
+  background-color: #f1f5f9;
+}
+
+.export-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: #ffffff;
+  padding: 0.65rem 1.5rem;
+  border-bottom: 1px solid #cbd5e1;
+}
+
+.header-left, .header-actions {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+/* Badges de statuts */
+.badge-statut {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  padding: 0.25rem 0.65rem;
+  font-size: 0.75rem;
+  font-weight: 700;
+  border-radius: 20px;
+  text-transform: uppercase;
+}
+
+.statut-brouillon { background: #f1f5f9; color: #475569; }
+.statut-finalise { background: #ecfdf5; color: #047857; border: 1px solid #a7f3d0; }
+.statut-transmis { background: #eff6ff; color: #1d4ed8; border: 1px solid #bfdbfe; }
+
+/* Boutons d'action */
+.btn-download {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  padding: 0.45rem 0.85rem;
+  font-size: 0.85rem;
+  font-weight: 600;
+  border: 1px solid #cbd5e1;
+  background: #fff;
+  color: #1e293b;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+.btn-finalize {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  padding: 0.45rem 0.95rem;
+  font-size: 0.85rem;
+  font-weight: 600;
+  background: #0284c7;
+  color: #fff;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+.btn-transmit {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  padding: 0.45rem 1rem;
+  font-size: 0.85rem;
+  font-weight: 600;
+  background: #009e60;
+  color: #fff;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+.btn-ghost {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  background: transparent;
+  border: 1px solid #cbd5e1;
+  padding: 0.45rem 0.85rem;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+/* Zone d'affichage */
+.export-body {
+  display: grid;
+  grid-template-columns: 320px 1fr;
+  padding: 1.5rem;
+  gap: 1.5rem;
+  flex: 1;
+}
+
+.summary-card {
+  background: #fff;
+  border: 1px solid #e2e8f0;
+  border-radius: 8px;
+  padding: 1.25rem;
+  margin-bottom: 1rem;
+}
+
+.summary-title {
+  font-size: 0.875rem;
+  font-weight: 700;
+  color: #0b2545;
+  margin-bottom: 0.75rem;
+}
+
+.summary-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  font-size: 0.8rem;
+}
+
+.summary-list li {
+  display: flex;
+  flex-direction: column;
+  color: #64748b;
+}
+
+.summary-list strong {
+  color: #0f172a;
+}
+
+.lock-notice {
+  display: flex;
+  gap: 0.75rem;
+  background: #ecfdf5;
+  border: 1px solid #a7f3d0;
+  padding: 1rem;
+  border-radius: 8px;
+  color: #065f46;
+  font-size: 0.8rem;
+}
+
+.lock-notice i {
+  font-size: 1.5rem;
+}
+
+/* Modal */
+.modal-backdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(15, 23, 42, 0.6);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+}
+
+.modal-container {
+  background: #fff;
+  border-radius: 8px;
+  width: 480px;
+  max-width: 90vw;
+  box-shadow: 0 15px 30px rgba(0, 0, 0, 0.2);
+}
+
+.modal-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1rem 1.25rem;
+  border-bottom: 1px solid #e2e8f0;
+}
+
+.modal-head h3 {
+  font-size: 1rem;
+  margin: 0;
+  color: #0b2545;
+}
+
+.btn-close {
+  background: none;
+  border: none;
+  font-size: 1.4rem;
+  cursor: pointer;
+}
+
+.modal-body {
+  padding: 1.25rem;
+}
+
+.modal-foot {
+  padding: 1rem 1.25rem;
+  border-top: 1px solid #e2e8f0;
+  display: flex;
+  justify-content: flex-end;
+  gap: 0.75rem;
+}
+
+/* Feuille A4 */
+.preview-area {
+  display: flex;
+  justify-content: center;
+  overflow-y: auto;
+}
+
+.a4-sheet {
+  background: #ffffff;
+  width: 210mm;
+  min-height: 297mm;
+  padding: 25mm 20mm;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+  font-family: 'Times New Roman', Times, serif;
+  color: #000;
+  font-size: 11pt;
+  line-height: 1.35;
+  display: flex;
+  flex-direction: column;
+}
+
+.doc-header-block { display: flex; justify-content: space-between; margin-bottom: 2rem; }
+.timbre-box { width: 52%; font-size: 9pt; }
+.republique-box { width: 45%; text-align: center; font-size: 9pt; }
+.doc-title-block { text-align: center; margin-bottom: 1.5rem; }
+.acte-type { font-size: 13pt; font-weight: bold; margin-bottom: 0.3rem; }
+.doc-visas, .doc-dispositif { margin-bottom: 1.5rem; text-align: justify; }
+.visa-paragraph, .article-text { text-indent: 1.5rem; margin-bottom: 0.4rem; }
+.doc-pivot { text-align: center; font-weight: bold; margin: 1.5rem 0; letter-spacing: 0.1em; }
+.doc-signature-block { margin-top: auto; padding-top: 2rem; text-align: right; }
+.signature-space { height: 50px; }
+
+/* Impression (@media print) */
+@media print {
+  .no-print { display: none !important; }
+  body, .export-screen, .preview-area { background: #fff !important; padding: 0 !important; }
+  .export-body { display: block !important; padding: 0 !important; }
+  .a4-sheet { box-shadow: none !important; width: 100% !important; padding: 15mm !important; }
+}
